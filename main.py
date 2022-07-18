@@ -1,16 +1,38 @@
-# This is a sample Python script.
+import json
+import os
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+from pymongo import MongoClient
+from dotenv import load_dotenv
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+load_dotenv()
 
 
-# Press the green button in the gutter to run the script.
+class MongoRepository:
+
+    def __init__(self, db_name, coll_name):
+        self.client = MongoClient(os.getenv('MONGO_URL'))
+        self.db = self.client[db_name]
+        self.collection = self.db.get_collection(coll_name)
+
+    def find(self, projection=None, skip=0, limit=0, filter=None, sort=None):
+        return self.collection.find(projection=projection, skip=skip, limit=limit, filter=filter, sort=sort)
+
+    def insert_one(self, document):
+        return self.collection.insert_one(document)
+
+    def insert_many(self, documents):
+        return self.collection.insert_many(documents)
+
+
+def mongo_import(repository: MongoRepository):
+    with open('./pokemon.json') as f:
+        data = json.load(f)
+    return repository.insert_many(data)
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    repository = MongoRepository('test', 'pokemon')
+    # mongo_import(repository)
+    results = repository.find(filter={"name": "フシギダネ"})
+    for result in results:
+        print(result)
