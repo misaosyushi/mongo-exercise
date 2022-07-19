@@ -34,17 +34,27 @@ if __name__ == "__main__":
     #     print(result)
 
     # skip, limit, sort
+    # results = repository.find(
+    #     projection={"_id": False, "name": True, "types": True, "abilities": True},
+    #     filter={"types": {"$in": ["ほのお"]}},
+    #     skip=10,
+    #     limit=10,
+    #     sort=[("name", DESCENDING)]
+    # )
+    # for result in results:
+    #     print(result)
+
+    # AND検索
     results = repository.find(
         projection={"_id": False, "name": True, "types": True, "abilities": True},
-        filter={"types": {"$in": ["ほのお"]}},
-        skip=10,
-        limit=5,
-        sort=[("name", DESCENDING)]
+        filter={'$and': [{"types": {"$in": ["くさ"]}}, {"abilities": {"$in": ["しんりょく"]}}]},
+        limit=10,
     )
     for result in results:
         print(result)
 
-    # AND検索
     # 部分一致
+
     # 範囲検索
+
     # トランザクション https://pymongo.readthedocs.io/en/stable/api/pymongo/client_session.html
