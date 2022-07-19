@@ -33,6 +33,15 @@ if __name__ == "__main__":
     # for result in results:
     #     print(result)
 
+    # ネストしたオブジェクトのフィールドで検索
+    # results = repository.find(
+    #     projection={"_id": False, "name": True, "stats": True},
+    #     filter={"stats.hp": 130},
+    #     limit=10,
+    # )
+    # for result in results:
+    #     print(result)
+
     # skip, limit, sort
     # results = repository.find(
     #     projection={"_id": False, "name": True, "types": True, "abilities": True},
@@ -54,14 +63,22 @@ if __name__ == "__main__":
     #     print(result)
 
     # 部分一致
+    # results = repository.find(
+    #     projection={"_id": False, "name": True, "types": True, "abilities": True},
+    #     filter={"name": {"$regex": "ブ"}},
+    #     limit=10,
+    # )
+    # for result in results:
+    #     print(result)
+
+    # 範囲検索
     results = repository.find(
-        projection={"_id": False, "name": True, "types": True, "abilities": True},
-        filter={"name": {"$regex": "ブ"}},
+        projection={"_id": False, "name": True, "stats": True},
+        filter={"stats.attack": {"$gte": 131, "$lte": 135}},
+        sort=[("stats.attack", DESCENDING)],
         limit=10,
     )
     for result in results:
         print(result)
-
-    # 範囲検索
 
     # トランザクション https://pymongo.readthedocs.io/en/stable/api/pymongo/client_session.html
