@@ -2,6 +2,7 @@ import json
 import os
 
 from dotenv import load_dotenv
+from pymongo import ASCENDING, DESCENDING
 
 from pokemon_repository import PokemonRepository
 
@@ -24,15 +25,25 @@ if __name__ == "__main__":
     #     print(result)
 
     # projectionでフィールドを指定、$inで配列に含む文字列を指定
+    # results = repository.find(
+    #     projection={"_id": False, "name": True, "types": True},
+    #     filter={"types": {"$in": ["みず"]}},
+    #     limit=10,
+    # )
+    # for result in results:
+    #     print(result)
+
+    # skip, limit, sort
     results = repository.find(
-        projection={"_id": False, "name": True, "types": True},
-        filter={"types": {"$in": ["みず"]}},
-        limit=10,
+        projection={"_id": False, "name": True, "types": True, "abilities": True},
+        filter={"types": {"$in": ["ほのお"]}},
+        skip=10,
+        limit=5,
+        sort=[("name", DESCENDING)]
     )
     for result in results:
         print(result)
 
-    # skip, limit, sort
     # AND検索
     # 部分一致
     # 範囲検索
