@@ -45,15 +45,22 @@ if __name__ == "__main__":
     #     print(result)
 
     # AND検索
+    # results = repository.find(
+    #     projection={"_id": False, "name": True, "types": True, "abilities": True},
+    #     filter={'$and': [{"types": {"$in": ["くさ"]}}, {"abilities": {"$in": ["しんりょく"]}}]},
+    #     limit=10,
+    # )
+    # for result in results:
+    #     print(result)
+
+    # 部分一致
     results = repository.find(
         projection={"_id": False, "name": True, "types": True, "abilities": True},
-        filter={'$and': [{"types": {"$in": ["くさ"]}}, {"abilities": {"$in": ["しんりょく"]}}]},
+        filter={"name": {"$regex": "ブ"}},
         limit=10,
     )
     for result in results:
         print(result)
-
-    # 部分一致
 
     # 範囲検索
 
