@@ -17,7 +17,8 @@ def insert_initial_data(repo):
 
 if __name__ == "__main__":
     repository = PokemonRepository(os.getenv("MONGO_URL"), "test", "pokemon")
-    # insert_initial_data(repository)
+    repository.create_collection()
+    insert_initial_data(repository)
 
     # nameで検索
     # results = repository.find(filter={"name": "フシギダネ"})
@@ -72,13 +73,13 @@ if __name__ == "__main__":
     #     print(result)
 
     # 範囲検索
-    results = repository.find(
-        projection={"_id": False, "name": True, "stats": True},
-        filter={"stats.attack": {"$gte": 131, "$lte": 135}},
-        sort=[("stats.attack", DESCENDING)],
-        limit=10,
-    )
-    for result in results:
-        print(result)
+    # results = repository.find(
+    #     projection={"_id": False, "name": True, "stats": True},
+    #     filter={"stats.attack": {"$gte": 131, "$lte": 135}},
+    #     sort=[("stats.attack", DESCENDING)],
+    #     limit=10,
+    # )
+    # for result in results:
+    #     print(result)
 
     # トランザクション https://pymongo.readthedocs.io/en/stable/api/pymongo/client_session.html

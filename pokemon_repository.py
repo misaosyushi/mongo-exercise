@@ -15,8 +15,38 @@ class PokemonRepository:
             projection=projection, skip=skip, limit=limit, filter=filter, sort=sort
         )
 
+    def count(self):
+        return self.collection.count_documents({})
+
     def insert_one(self, document):
         return self.collection.insert_one(document)
 
     def insert_many(self, documents):
-        return self.collection.insert_many(documents)
+        with self.client.start_session() as session:
+            with session.start_transaction():
+                self.collection.insert_many(documents, session=session)
+
+    def create_collection(self):
+        self.collection.drop()
+        pokemon_schema = {
+            "bsonType": "object",
+            "required": ["no", "name", "form", "isMegaEvolution", "types"],
+            "properties": {
+                "no": {
+                    "bsonType": "int"
+                },
+                "name": {
+                    "bsonType": "string"
+                },
+                "form": {
+                    "bsonType": "string"
+                },
+                "isMegaEvolution": {
+                    "bsonType": "bool"
+                },
+                "types": {
+                    "bsonType": "array"
+                }
+            }
+        }
+        self.db.create_collection("pokemon", validator={"$jsonSchema": pokemon_schema})
