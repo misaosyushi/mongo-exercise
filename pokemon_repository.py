@@ -1,5 +1,5 @@
 from dotenv import load_dotenv
-from pymongo import MongoClient
+from pymongo import MongoClient, ReadPreference
 
 load_dotenv()
 
@@ -15,6 +15,9 @@ class PokemonRepository:
             projection=projection, skip=skip, limit=limit, filter=filter, sort=sort
         )
 
+    def list_databases(self):
+        print(self.client.list_database_names())
+
     def count(self):
         return self.collection.count_documents({})
 
@@ -22,6 +25,9 @@ class PokemonRepository:
         return self.collection.insert_one(document)
 
     def insert_many(self, documents):
+        return self.collection.insert_many(documents)
+
+    def insert_many_with_transaction(self, documents):
         with self.client.start_session() as session:
             with session.start_transaction():
                 self.collection.insert_many(documents, session=session)

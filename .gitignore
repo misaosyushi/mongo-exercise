@@ -1,5 +1,7 @@
 /db
 /configdb
+/primary
+/secondary
 pokemon.json
 
 # Byte-compiled / optimized / DLL files
